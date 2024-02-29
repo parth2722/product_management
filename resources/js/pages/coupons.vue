@@ -61,7 +61,7 @@ const columns = [
     },
 ]
 
-const fetchCategory = async () => {
+const fetchCoupon = async () => {
     try {
         const response = await axios.get('http://127.0.0.1:8000/api/coupons/')
         coupans.value = response.data
@@ -80,7 +80,7 @@ const deleteCoupon = async id => {
             await axios.delete(`http://127.0.0.1:8000/api/coupons/${id}`)
 
             console.log('coupon has been deleted')
-            fetchCategory()
+            fetchCoupon()
         } catch (error) {
             console.error('Error deleting coupon:', error)
         }
@@ -88,15 +88,8 @@ const deleteCoupon = async id => {
 }
 
 
-onMounted(fetchCategory)
+onMounted(fetchCoupon)
 
-// useHead({
-//     title: 'Category List',
-// })
-
-// definePageMeta({
-//     middleware: 'auth',
-// })
 </script>
 
 <style scoped>

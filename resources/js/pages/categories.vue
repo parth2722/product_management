@@ -88,13 +88,6 @@ const deleteCategory = async slug => {
 
 onMounted(fetchCategory)
 
-// useHead({
-//     title: 'Category List',
-// })
-
-// definePageMeta({
-//     middleware: 'auth',
-// })
 </script>
 
 <style scoped>

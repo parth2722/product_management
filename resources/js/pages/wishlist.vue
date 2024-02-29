@@ -6,15 +6,6 @@
                     <span class="blurred-text">My wishlist</span>
                 </v-card-title>
             </v-col>
-            <v-col>
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
-                    hide-details></v-text-field>
-            </v-col>
-            <v-col class="text-right">
-                <v-btn @click="refreshData" icon>
-                    <v-icon>mdi-refresh</v-icon>
-                </v-btn>
-            </v-col>
         </v-row>
         <table class="min-w-full border border-gray-200">
             <thead>
@@ -23,12 +14,13 @@
                     <th class="px-4 py-2">Product Name</th>
                     <th class="px-4 py-2">Price</th>
                     <th class="px-4 py-2">Actions</th>
+                    <th class="px-4 py-2">Add-cart</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(product, index) in products" :key="index">
                     <td class="border px-4 py-2">
-                        <!-- Use router-link to navigate to the product detail page -->
+
                         <router-link :to="`/store/${product.url_key}`">
                             <img loading="lazy" :src="product.image" alt="Product Image" class="w-16 h-16">
                         </router-link>
@@ -54,8 +46,6 @@
                         </v-btn>
 
                     </td>
-
-
                 </tr>
             </tbody>
         </table>
@@ -64,18 +54,15 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';  // Import useRoute from vue-router
 import axios from 'axios';
 import { useMainStore } from '../store/index';
-const search = ref('');
 const wishlist = ref([]);
 const products = ref([]);
-const route = useRoute();  // Use useRoute to access route parameters
 const mainStore = useMainStore();
 import { useCartStore } from '@/stores/store';
 const cartItems = ref([]);
 const cartStore = useCartStore();
-// Function to retrieve wishlist data from the API
+
 const fetchWishlist = async () => {
     try {
         const user_id = mainStore.user.id;
@@ -83,7 +70,7 @@ const fetchWishlist = async () => {
         wishlist.value = response.data;
         console.log(response.data)
         products.value = response.data.map((item) => item.product);
-        console.log('badiya', products.value)
+
     } catch (error) {
         console.error('Error fetching wishlist data:', error);
     }
@@ -119,11 +106,6 @@ const addToCart = (product) => {
     } else {
         alert(`${product.name} already in cart`);
     }
-};
-
-// Function to refresh data (if needed)
-const refreshData = () => {
-    fetchWishlist();
 };
 
 

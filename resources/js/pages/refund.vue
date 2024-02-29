@@ -20,7 +20,7 @@
                 </v-row>
             </v-card-header>
             <v-card-body>
-                <v-data-table :headers="columns" :items="filteredOrders" class="mt-4" :loading="isLoading">
+                <v-data-table :headers="columns" :items="filteredRefund" class="mt-4" :loading="isLoading">
                     <template v-slot:item.status="{ item }">
 
                         <span if="item.status === 'shipped'"
@@ -43,11 +43,11 @@ import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
-const orders = ref([]);
+const Refunds = ref([]);
 const isLoading = ref(true);
 
 const search = ref('');
-const filteredOrders = ref([]);
+const filteredRefund = ref([]);
 
 export default {
     setup() {
@@ -57,11 +57,11 @@ export default {
 
         const refreshData = () => {
             isLoading.value = true;
-            fetchOrders();
+            fetchRefund();
         };
 
-        const filterOrders = () => {
-            filteredOrders.value = orders.value.filter((order) => {
+        const filterRefunds = () => {
+            filteredRefund.value = Refunds.value.filter((order) => {
                 const searchLowerCase = search.value.toString();
                 return (
                     (order.totalQty && order.totalQty.toString().includes(searchLowerCase)) ||
@@ -81,7 +81,7 @@ export default {
             { title: 'grandTotal', value: 'grandTotal', sortable: true },
 
             {
-                title: 'Order Date',
+                title: 'Refund Date',
                 value: 'created_at',
                 sortable: true,
                 align: 'center',
@@ -90,22 +90,22 @@ export default {
         ];
 
 
-        const fetchOrders = async () => {
+        const fetchRefund = async () => {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/refund');
-                orders.value = response.data;
+                orderRefundss.value = response.data;
                 isLoading.value = false;
             } catch (error) {
-                console.error('Error fetching orders data:', error);
+                console.error('Error fetching Refunds data:', error);
             }
         };
 
         watch(() => {
-            filterOrders();
+            filterRefunds();
         });
 
         onMounted(() => {
-            fetchOrders();
+            fetchRefund();
         });
         return {
             router,
@@ -113,7 +113,7 @@ export default {
             refreshData,
             search,
             isLoading,
-            filteredOrders,
+            filteredRefund,
 
         };
 

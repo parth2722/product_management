@@ -16,17 +16,6 @@
                 </div>
             </div>
 
-            <!-- Order History Section -->
-            <!-- <div class="mb-8">
-                <h1 class="text-2xl font-semibold mb-4">Order History</h1>
-
-                <div class="mt-4">
-                    <label for="status" class="block text-sm font-medium text-gray-600">Order</label>
-                    <input v-model="orders.status" class="mt-1 p-2 w-full border rounded" />
-                </div>
-            </div> -->
-
-            <!-- Account Settings Section -->
             <div>
                 <h1 class="text-2xl font-semibold mb-4">Account Settings</h1>
                 <div>
@@ -39,31 +28,8 @@
                     <input v-model="email" type="email" id="email" name="email"
                         class="mt-1 p-2 w-full border rounded" />
                 </div>
-                <div class="mt-4">
-                    <label class="block text-sm font-medium text-gray-600">Gender</label>
-                    <div class="mt-2">
-                        <div class="flex items-center">
-                            <input v-model="gender" type="radio" id="male" name="gender" value="male" class="mr-2">
-                            <label for="male" class="text-sm">Male</label>
-                        </div>
-                        <div class="flex items-center mt-2">
-                            <input v-model="gender" type="radio" id="female" name="gender" value="female"
-                                class="mr-2">
-                            <label for="female" class="text-sm">Female</label>
-                        </div>
-                        <div class="flex items-center mt-2">
-                            <input v-model="gender" type="radio" id="other" name="gender" value="other" class="mr-2">
-                            <label for="other" class="text-sm">Other</label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="mt-4">
-                    <label for="email" class="block text-sm font-medium text-gray-600">Number</label>
-                    <input v-model="number" type="email" id="email" name="email"
-                        class="mt-1 p-2 w-full border rounded" />
-                </div>
-                <button @click="saveUser" class="mt-8 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                <button @click="saveProfile" class="mt-8 bg-orange-500 text-white py-2 px-4 rounded hover:bg-blue-600">
                     Save Changes
                 </button>
             </div>
@@ -84,8 +50,7 @@ export default {
         const router = useRouter()
         const name = ref(store.getUser.name)
         const email = ref(store.getUser.email)
-        // const name = ref(store.getUser.name)
-        // const name = ref(store.getUser.name)
+
 
         const users = ref({
             name: '',
@@ -95,12 +60,10 @@ export default {
             password: '',
             confirmPassword: '',
         })
-        const orders = ref({
-            status: '',
-        });
+
         const route = useRoute()
 
-        const fetchUser = async () => {
+        const fetchProfile = async () => {
             try {
                 const response = await axios.get(`http://localhost:8000/api/user/${route.params.id}`)
                 users.value = response.data
@@ -111,7 +74,7 @@ export default {
         }
 
 
-        const saveUser = async () => {
+        const saveProfile = async () => {
             if (users.value.password !== users.value.confirmPassword) {
                 alert('Passwords do not match')
                 return
@@ -127,13 +90,12 @@ export default {
             }
         }
 
-        onMounted(fetchUser)
+        onMounted(fetchProfile)
         return {
             users,
-            saveUser,
+            saveProfile,
             name,
             email
-            // fetchOrders,
         }
     },
 }

@@ -52,7 +52,7 @@ export default {
             url_key: '',
             image: null,
         })
-        const validationError = ref({})
+
         const errorList = ref({ categories: [] })
 
         const fetchCategoryId = async () => {

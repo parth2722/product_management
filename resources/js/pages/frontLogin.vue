@@ -6,7 +6,7 @@
           <div v-if="error" class="bg-red-500 text-white p-4 mb-4">{{ error }}</div>
           <form @submit.prevent="login" class="mb-4">
             <div class="mb-4">
-              <label for="email" class="block text-gray-700 font-bold mb-2">Email Address</label>
+              <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
               <input v-model="form.email" type="email" id="email" name="email" class="w-full p-2 border border-gray-300 rounded">
             </div>
 
@@ -18,6 +18,7 @@
             <div class="flex">
               <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Login</button>
               <Glogin></Glogin>
+              <g-itlogin></g-itlogin>
             </div>
           </form>
         </div>

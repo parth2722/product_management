@@ -1,14 +1,11 @@
 <template>
     <parth>
-        <div>
-
+        <v-container>
             <h1 class="text-yellow-500 text-3xl font-bold" style="margin-left: 45%;">Cart page</h1>
-
             <br>
-
             <div class="cart-section flex">
                 <!-- Cart Items on the Left Side -->
-                <div class="cart-items flex-1" style="margin-left: 7%;">
+                <div class="cart-items flex-1">
                     <div v-if="cartItems.length === 0">
                         <p>Your cart is empty</p>
                     </div>
@@ -21,7 +18,7 @@
                                 <!-- Product Image -->
                                 <div>
                                     <img :src="'http://127.0.0.1:8000' + item.image" alt="Product Image"
-                                        style="width: 150px; height: 150px;">
+                                        style="width: 100px; height: 100px;">
                                 </div>
 
                                 <!-- Product Details -->
@@ -65,9 +62,9 @@
                             <hr>
                         </div>
                     </div>
-                    <router-link to="/checkout">
-                        <button class="placed bg-blue-500 text-white py-2 px-4 mt-4 rounded">PLACE ORDER</button>
-                    </router-link>
+                    <router-link :to="isLoggedIn ? '/checkout' : '/frontLogin'">
+                        <button class="placed bg-orange-500 text-white py-2 px-4 mt-4 rounded">PLACE ORDER</button>
+                      </router-link>
 
                     <div v-if="cartItems && cartItems.length === 0">
                         <p>Your cart is empty</p>
@@ -75,7 +72,7 @@
                 </div>
 
                 <!-- Price Details on the Right Side -->
-                <div class="price-details ml-4" style="margin-right: 7%;">
+                <div class="price-details ml-4">
                     <div class="border border-gray-300 p-4">
                         <span class="text-gray-500 text-sm">PRICE DETAILS</span>
 
@@ -112,9 +109,11 @@
                                     <td colspan="2" class="py-4">
                                         <div class="flex items-center">
                                             <!-- Hide the button and input field when appliedCouponCode is present -->
-                                            <button v-if="!isCouponApplied" @click="applyCoupon" class="bg-blue-500 text-white py-2 px-4 mr-2 rounded">Apply Coupon</button>
-                                            <input v-if="!isCouponApplied" v-model="code" type="text" placeholder="Coupon Code" :class="{ 'border-red-500': codeError }" class="border border-gray-300 py-2 px-4">
-
+                                            <button v-if="!isCouponApplied" @click="applyCoupon"
+                                                class="bg-orange-500 text-white py-2 px-4 mr-2 rounded">Apply Coupon</button>
+                                            <input v-if="!isCouponApplied" v-model="code" type="text"
+                                                placeholder="Coupon Code" :class="{ 'border-red-500': codeError }"
+                                                class="border border-gray-300 py-2 px-4">
 
                                         </div>
 
@@ -133,7 +132,7 @@
                 </div>
             </div>
 
-        </div>
+        </v-container>
     </parth>
 </template>
 <!-- nzsY3lU3dMeZXIxN -->
@@ -142,9 +141,11 @@ import Parth from '../layouts/Parth.vue';
 import { onMounted, ref, computed, watch } from 'vue';
 import { useCartStore } from '../store/stores';
 import { useMainStore } from '../store/index';
+import { useRoute, useRouter } from 'vue-router';
+
+const router = useRouter();
 const showOriginalTotal = ref(true);
 import axios from 'axios';
-import Coupons from './coupons.vue';
 const cartStore = useCartStore();
 const codeError = ref(false);
 const codeErrorMessage = ref('');
@@ -152,7 +153,6 @@ const code = ref(localStorage.getItem('appliedCouponCode') || '');
 const cartItems = ref([]);
 const isCouponApplied = ref(!!localStorage.getItem('appliedCouponCode'));
 const appliedCouponCode = ref(JSON.parse(localStorage.getItem('appliedCouponCode')) || {});
-
 const store = useMainStore();
 const calculateTotalAmount = () => {
 
@@ -162,7 +162,6 @@ const calculateTotalAmount = () => {
 
     return totalAmount;
 };
-
 const isLoggedIn = computed(() => {
     return store.getToken !== null;
 });
@@ -217,10 +216,6 @@ const decreaseQuantity = (productId) => {
     localStorage.setItem('cartItems', JSON.stringify(updatedItems));
 };
 
-// const isCouponApplied = computed(() => {
-//     return !!localStorage.getItem('appliedCouponCode');
-// });
-
 
 const applyCoupon = async () => {
     try {
@@ -263,7 +258,17 @@ const applyCoupon = async () => {
     }
 };
 
-
 </script>
 
-<style scoped></style>
+<style scoped>
+@media screen and (max-width: 768px) {
+    .text-yellow-500 {
+        font-size: 2rem;
+    }
+
+    .cart-section {
+        flex-direction: column;
+    }
+
+    /* Add more styles as needed for smaller screens */
+}</style>

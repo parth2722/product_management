@@ -8,25 +8,17 @@
                     <span class="blurred-text">Order list</span>
                 </v-card-title>
             </v-col>
-            <v-col>
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
-                    hide-details></v-text-field>
-            </v-col>
-            <v-col class="text-right">
-                <v-btn @click="refreshData" icon>
-                    <v-icon>mdi-refresh</v-icon>
-                </v-btn>
-            </v-col>
         </v-row>
         <div v-for="order in orders" :key="order.product.id" class="order-details">
 
             <router-link :to="{ name: 'userOrder-id', params: { id: order.orderID } }">
                 <div class="product-container">
                     <!-- Product Image -->
-                    <div class="product-image">
-                        <img loading="lazy" :src="order.product.image" alt="Product Image" class="product-image">
-                    </div>
-
+                    <router-link :to="`/store/${order.product.url_key}`">
+                        <div class="product-image">
+                            <img loading="lazy" :src="order.product.image" alt="Product Image" class="product-image">
+                        </div>
+                    </router-link>
                     <!-- Product Details and Price -->
                     <div class="product-details-container">
                         <div class="product-details">
@@ -35,21 +27,18 @@
                                 <span class="product-color">Order-id: {{ order.orderID }}</span>
                             </div>
                         </div>
-
-
                     </div>
                     <div class="product-price">
                         ₹{{ order.product.price }}
                     </div>
 
-                    <div>
-                        <btn class="flex" @click="viewOrder(order.product.url_key)">
+                    <router-link :to="{ name: 'reviewRate-url_key', params: { url_key: order.product.url_key } }">
+                        <div class="flex"  @click="viewOrder(order.product.url_key)">
                             <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMTknIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTggMTgiPgoJPGcgZmlsbD0nbm9uZSc+CgkJPHBvbHlnb24gaWQ9IlNoYXBlIiBmaWxsPSIjMjg3NEYxIiBwb2ludHM9IjkgMTIuMDYyNSAxMy42Mzc1IDE1LjQzNzUgMTEuODYyNSA5Ljk4NzUgMTYuNSA2LjY4NzUgMTAuODEyNSA2LjY4NzUgOSAxLjA2MjUgNy4xODc1IDYuNjg3NSAxLjUgNi42ODc1IDYuMTM3NSA5Ljk4NzUgNC4zNjI1IDE1LjQzNzUiIC8+CgkJPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjAgMCAxOCAwIDE4IDE4IDAgMTgiIC8+Cgk8L2c+Cjwvc3ZnPg=="
                                 alt="Review Product" class="w-8 h-8" />
                             <span class="ml-2" style="color: rgba(35, 79, 201, 0.884);">Rate & Review Product</span>
-                            <!-- <span class="product-color">orderId: {{ orderID }}</span> -->
-                        </btn>
-                    </div>
+                        </div>
+                    </router-link>
                 </div>
             </router-link>
         </div>
@@ -176,14 +165,6 @@ export default {
     /* Equivalent to hover:shadow-lg in Tailwind */
 }
 
-
-.product-name {
-    @apply block text-gray-800 font-semibold mb-1;
-}
-
-.product-info {
-    @apply text-gray-600 text-sm;
-}
 
 .product-container {
     display: flex;

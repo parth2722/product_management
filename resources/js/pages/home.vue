@@ -40,7 +40,7 @@
                                             </div>
                                             <v-card-text class="mt-2">
                                                 <span style="font-size: 25px;">{{ item.name }}</span>
-                                                <div class="flex font-medium items-center justify-between mt-4">
+                                                <div class="flex font-medium items-center justify-between mt-3">
                                                     <span style="font-size: 18px; font-weight: 800;">{{ item.detail
                                                     }}</span>
                                                     <br>
@@ -95,7 +95,6 @@
 </template>
 <script setup>
 import Parth from '../layouts/Parth.vue';
-import LaunchSale from '../components/LaunchSale.vue';
 import axios from 'axios';
 import bus from '../plugins/eventBus'
 import { ref, onMounted, watch, computed } from 'vue';
@@ -118,6 +117,7 @@ const updateFilteredProducts = (searchQuery) => {
         filteredProducts.value = products.value;
     }
 };
+
 const chunkedProducts = computed(() => {
     const chunkSize = 4;
     const chunks = [];
@@ -129,16 +129,6 @@ const chunkedProducts = computed(() => {
     return chunks;
 });
 
-const HotProducts = computed(() => {
-    const chunkSize = 1;
-    const chunks = [];
-
-    for (let i = 0; i < filteredProducts.value.length; i += chunkSize) {
-        chunks.push(filteredProducts.value.slice(i, i + chunkSize));
-    }
-
-    return chunks;
-});
 
 const laestProducts = computed(() => {
     const chunkSize = 4;
@@ -179,19 +169,26 @@ onMounted(() => {
     bus.on('search', updateFilteredProducts); // Listen for search events
 });
 
-// Watch for changes in the route and update filtered products accordingly
+
 watch(() => route.params.category, fetchProducts);
 
 </script>
 
 <style scoped>
+body {
+    width: 100%;
+    max-width: 1020px;
+    margin: 0 auto;
+    padding: 0 auto;
+    background-color: #fff;
+}
+
 .yellow-text {
     font-size: 60px;
     color: orange;
     text-align: center;
     margin: 0;
 }
-
 
 .v-card {
     width: 250px;
@@ -204,6 +201,49 @@ watch(() => route.params.category, fetchProducts);
     border-radius: 8px;
 }
 
+.products-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.v-col {
+    flex: 0 0 calc(25.00% - 10px);
+    /* Adjust the percentage and margin as needed */
+    margin-bottom: 20px;
+    /* Adjust margin as needed */
+}
+@media screen and (max-width: 768px) {
+    .v-col {
+        flex: 0 0 calc(50% - 10px);
+        /* Adjust the percentage and margin as needed for smaller screens */
+    }
+}
+
+/* Add a media query for screens smaller than 480px */
+@media screen and (max-width: 480px) {
+    .v-col {
+        flex: 0 0 calc(100% - 10px);
+        /* Adjust the percentage and margin as needed for even smaller screens */
+    }
+}
+
+.yellow-text {
+    font-size: 60px;
+    color: orange;
+    text-align: center;
+    margin: 0;
+}
+
+.v-card {
+    width: 250px;
+    /* Adjust card width as needed */
+    margin: 0 auto;
+}
+
+.v-img {
+    object-fit: cover;
+    border-radius: 8px;
+}
 
 .products-container {
     display: flex;
@@ -213,7 +253,6 @@ watch(() => route.params.category, fetchProducts);
 .v-col {
     flex: 0 0 calc(25.00% - 10px);
     /* Adjust the percentage and margin as needed */
-
     margin-bottom: 20px;
     /* Adjust margin as needed */
 }

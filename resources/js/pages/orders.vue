@@ -68,10 +68,7 @@ export default {
     setup() {
         const router = useRouter();  // Create a router instance
 
-        // const viewOrder = (id) => {
-        //     console.log(id)
-        //     router.push(`/order/${id}`);  // Navigate to the detailed view (assuming your route is '/order/:orderId')
-        // };
+
 
         const viewOrder = (id) => {
             console.log(id);

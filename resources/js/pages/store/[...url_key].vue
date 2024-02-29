@@ -9,12 +9,11 @@ const breadcrumbs = ref([]);
 const productData = ref([]);
 
 const Rdata = ref([]);
-
 const mainStore = useMainStore();
 const route = useRoute();
 const cartStore = useCartStore();
 const user_id = mainStore.user ? mainStore.user.id : null;
-const product = ref({});
+
 
 const addedToWishlist = ref(false);
 const userWishlist = ref([]);
@@ -44,7 +43,7 @@ const fetchRating = async () => {
         product_id.value = productData.value.id;
         const response = await axios.get(`http://127.0.0.1:8000/api/ratingData/${product_id.value}`);
         Rdata.value = response.data;
-        console.log('kuch', response.data);
+
 
 
     } catch (error) {
@@ -84,18 +83,13 @@ const addToCart = () => {
     // Call the action from Pinia store
     cartStore.addToCart(productData.value.id, cartItem);
 };
-const isWishlistActive = ref(false); // Track the wishlist state
 
 
 const addToWishlist = async () => {
     await fetchUserWishlist();
 
     try {
-        // Check if the user has already added the product to the wishlist
-        // const response = await axios.get(`/api/wishlists/${userId}`);
-        // userWishlist.value = response.data;
 
-        // Check if the product is already in the user's wishlist
         const isProductInWishlist = userWishlist.value.some(
             (item) => item.product_id === productData.value.id
         );
@@ -169,9 +163,11 @@ const checkWishlist = async () => {
 
 <template>
     <parth>
-        <section class="mx-4 my-16 product-details">
+        <v-container>
+        <section class="product-details">
+
             <div class="flex justify-center max-h-96 xl:max-h-[600px]">
-                <div class="-m-4 bg-white p-8 rounded-lg w-full">
+                <div class="bg-white rounded-lg w-full">
                     <!-- Inside your template -->
                     <div class="flex items-center justify-between">
                         <v-breadcrumbs :items="breadcrumbs" divider=">"></v-breadcrumbs>
@@ -187,19 +183,17 @@ const checkWishlist = async () => {
                     </div>
 
                     <!-- Use v-bind to correctly set the image source -->
-                    <v-img :src="'http://127.0.0.1:8000' + productData.image" height="300"></v-img>
+                    <v-img :src="'http://127.0.0.1:8000' + productData.image" height="200"></v-img>
 
                     <div class="flex mt-4 w-full">
-                        <v-btn style="background-color: rgb(231, 150, 0);" class="rounded-lg" size="x-large" block
-                            @click="addToCart">
+                        <v-btn style="background-color: rgb(231, 150, 0); width: 200px !important;" class="rounded-lg" size="large" block @click="addToCart">
                             <span class="py-2 lg:text-lg">Add To Cart</span>
                         </v-btn>
                     </div>
-
                 </div>
 
             </div>
-            <div class="mt-8 md:mt-0 md:mx-8">
+            <div class="mt-8 md:mt-0" style="margin-left: 9%;">
 
                 <h3 style="font-size: 30px; font-weight: 600;">{{ productData.name }}</h3>
 
@@ -258,7 +252,9 @@ const checkWishlist = async () => {
 
                 </div>
             </div>
+
         </section>
+    </v-container>
     </parth>
 </template>
 

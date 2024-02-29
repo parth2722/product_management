@@ -44,6 +44,8 @@ const logout = () => {
     store.removeToken();
     store.removeUser();
     localStorage.removeItem('customerId');
+    localStorage.removeItem('cartItems');
+    localStorage.removeItem('appliedCouponCode');
     localStorage.removeItem('selectedAddress');
     localStorage.removeItem('orderId');
     router.push({ name: 'home' });

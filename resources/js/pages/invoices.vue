@@ -20,7 +20,7 @@
                 </v-row>
             </v-card-header>
             <v-card-body>
-                <v-data-table :headers="columns" :items="filteredOrders" class="mt-4" :loading="isLoading">
+                <v-data-table :headers="columns" :items="filteredInvoice" class="mt-4" :loading="isLoading">
                     <template v-slot:item.status="{ item }">
 
                         <span if="item.status === 'shipped'"
@@ -29,7 +29,7 @@
 
                     </template>
                     <template v-slot:item.actions="{ item }">
-                        <v-btn icon @click="viewOrder(item.id)">
+                        <v-btn icon @click="viewInvoice(item.id)">
                             <v-icon>mdi-eye</v-icon>
                         </v-btn>
                     </template>
@@ -45,28 +45,28 @@ import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
-const orders = ref([]);
+const invoices = ref([]);
 const isLoading = ref(true);
 
 const search = ref('');
-const filteredOrders = ref([]);
+const filteredInvoice = ref([]);
 
 export default {
     setup() {
         const router = useRouter();  // Create a router instance
 
-        const viewOrder = (id) => {
+        const viewInvoice = (id) => {
             console.log(id);
             router.push({ name: 'invoice-id', params: { id } });
         };
 
         const refreshData = () => {
             isLoading.value = true;
-            fetchOrders();
+            fetchInvoice();
         };
 
-        const filterOrders = () => {
-            filteredOrders.value = orders.value.filter((order) => {
+        const filterInvoices = () => {
+            filteredInvoice.value = invoices.value.filter((order) => {
                 const searchLowerCase = search.value.toString();
                 return (
                     (order.totalQty && order.totalQty.toString().includes(searchLowerCase)) ||
@@ -103,22 +103,22 @@ export default {
         ];
 
 
-        const fetchOrders = async () => {
+        const fetchInvoice = async () => {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/invoices');
-                orders.value = response.data;
+                invoices.value = response.data;
                 isLoading.value = false;
             } catch (error) {
-                console.error('Error fetching orders data:', error);
+                console.error('Error fetching invoices data:', error);
             }
         };
 
         watch(() => {
-            filterOrders();
+            filterInvoices();
         });
 
         onMounted(() => {
-            fetchOrders();
+            fetchInvoice();
         });
         return {
             router,
@@ -126,8 +126,8 @@ export default {
             refreshData,
             search,
             isLoading,
-            filteredOrders,
-            viewOrder,  // Expose the viewOrder method
+            filteredInvoice,
+            viewInvoice,
         };
 
     },

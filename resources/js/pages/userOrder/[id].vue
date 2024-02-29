@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <div class="save-button left" v-if="orders.status === 'shipped' || orders.status === 'Refund'">
-                        <v-btn color="blue"  @click="saveInvoice(id)">
+                        <v-btn color="orange"  @click="saveInvoice(id)">
                             <span>Download invoice</span>
                         </v-btn>
                     </div>
@@ -50,53 +50,6 @@
                 </div>
             </div>
         </div>
-
-
-        <div class="flex bg-white p-4 border border-gray-200">
-            <!-- Product Image Section -->
-            <div class="col-4/12 Oqho6V flex items-center justify-center">
-                <a :href="productDetails" target="_blank" rel="noopener noreferrer">
-                    <!-- <div class="h-24 w-24">
-                        <img :src="productDetails.image" loading="lazy" class="w-full h-full object-cover"
-                            alt="Product Image">
-                    </div> -->
-                </a>
-            </div>
-
-            <!-- Product Details Section -->
-            <div class="col-8/12">
-
-                <div class="flex flex-col mb-2">
-                    <!-- <span class="text-sm"><span class="font-bold">Color:</span> {{ productDetails.color }}</span> -->
-                    <!-- <span class="text-sm"><span class="font-bold">Size:</span> {{ productDetails.size }}</span> -->
-                    <!-- <span class="text-sm"><span class="font-bold">Seller:</span> {{ productDetails.seller }}</span> -->
-                </div>
-                <div class="flex items-center">
-                    <!-- <div class="text-lg font-bold text-black mr-2">{{ productDetails.price }}</div> -->
-                    <div class="flex items-center">
-                        <span class="text-sm text-gray-500"> +</span>
-                        <img src="//static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/lockinCoinNew_79b3fb.svg"
-                            class="w-4 h-4 ml-1" alt="Coins Icon">
-                        <!-- <span class="text-sm text-gray-500">{{ productDetails.coins }}</span> -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tracking Status Section -->
-            <div class="col-5/12">
-                <div class="flex items-center">
-                    <btn class="flex items-center" @click="viewOrder(orders.id)">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMTknIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTggMTgiPgoJPGcgZmlsbD0nbm9uZSc+CgkJPHBvbHlnb24gaWQ9IlNoYXBlIiBmaWxsPSIjMjg3NEYxIiBwb2ludHM9IjkgMTIuMDYyNSAxMy42Mzc1IDE1LjQzNzUgMTEuODYyNSA5Ljk4NzUgMTYuNSA2LjY4NzUgMTAuODEyNSA2LjY4NzUgOSAxLjA2MjUgNy4xODc1IDYuNjg3NSAxLjUgNi42ODc1IDYuMTM3NSA5Ljk4NzUgNC4zNjI1IDE1LjQzNzUiIC8+CgkJPHBvbHlnb24gaWQ9IlNoYXBlIiBwb2ludHM9IjAgMCAxOCAwIDE4IDE4IDAgMTgiIC8+Cgk8L2c+Cjwvc3ZnPg=="
-                            alt="Review Product" class="w-8 h-8" />
-                        <span class="ml-2">Rate & Review Product</span>
-                    </btn>
-                </div>
-            </div>
-        </div>
-
-
-
-
 
     </div>
 </template>
@@ -207,7 +160,7 @@ const saveInvoice = async () => {
 const createInvoicePDF = (order, addresses) => {
     try {
 
-        console.log('OrdASDeASDrs:', orders.value);
+
         console.log('Order Items:', orders.value.orderitem);
         // Create a new instance of jsPDF
         const pdf = new jsPDF();
@@ -286,11 +239,6 @@ const fetchAddress = async () => {
 };
 
 
-const calculateTotalAmount = () => {
-    return cartItems.value.reduce((total, item) => {
-        return total + item.price * item.quantity;
-    }, 0);
-};
 const fetchUsers = async () => {
     try {
         const response = await axios.get(`http://127.0.0.1:8000/api/user/${route.params.id}`);

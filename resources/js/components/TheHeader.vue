@@ -1,27 +1,26 @@
 <template>
-    <nav class="bg-gray-200 p-2">
-        <div class="container mx-auto flex justify-between items-center">
-            <router-link to="/home" style="margin-left: 5%;">
-                <img src="./1.png" width="110" height="130" class="navbar-brand" />
-            </router-link>
+    <v-container>
 
-            <div class="flex items-center space-x-4" style="margin-left: 5%;">
+
+            <div class="flex items-center space-x-4" >
                 <!-- <div id="google_translate_element"></div> -->
                 <!-- <the-welcome></the-welcome> -->
 
+                <router-link to="/home">
+                    <img src="./1.png" width="110" height="130" class="navbar-brand" />
+                </router-link>
                 <v-text-field v-model="searchText" label="Search..." append-inner-icon="i-material-symbols-search-rounded"
-                    hide-details variant="outlined" class="w-full" style="width: 150px;"
+                    hide-details
                     @keyup.enter="redirectToSearchResults"></v-text-field>
 
                 <profilepage v-if="isLoggedIn"></profilepage>
 
-                <router-link @click="redirectToCartOrLogin" to="/cart" class="text-black">
+                <router-link  to="/cart" class="text-black">
                     <v-icon color="black">mdi-cart</v-icon>
                   </router-link>
-                  <router-link @click="redirectToCartOrLoginw" to="/wishlist" class="text-black">
+                  <router-link v-if="isLoggedIn" to="/wishlist" class="text-black">
                     <v-icon color="black">mdi-heart</v-icon>
                   </router-link>
-
 
                 <router-link v-if="!isLoggedIn" to="/frontLogin" class="text-black">
                     Login
@@ -33,8 +32,8 @@
 
 
             </div>
-        </div>
-    </nav>
+
+   </v-container>
 
     <v-container>
         <categorys></categorys>
@@ -63,8 +62,8 @@ const isLoggedIn = computed(() => {
 
 const redirectToCartOrLogin = () => {
   if (isLoggedIn.value) {
-    // User is logged in, redirect to cart or wishlist
-    router.push('/cart'); // or router.push('/wishlist');
+
+    router.push('/cart');
   } else {
     // User is not logged in, redirect to login page
     router.push('/frontLogin');
@@ -73,8 +72,8 @@ const redirectToCartOrLogin = () => {
 
 const redirectToCartOrLoginw = () => {
   if (isLoggedIn.value) {
-    // User is logged in, redirect to cart or wishlist
-    router.push('/wishlist'); // or router.push('/wishlist');
+
+    router.push('/wishlist');
   } else {
     // User is not logged in, redirect to login page
     router.push('/frontLogin');
@@ -104,13 +103,6 @@ window.googleTranslateElementInit = function () {
         autoDisplay: false,
     }, 'google_translate_element');
 };
-
-// const searchText = ref('');
-
-// const searchProducts = () => {
-//     bus.emit('search', searchText.value);
-// };
-// watch(() => searchText.value, searchProducts);
 
 
 </script>

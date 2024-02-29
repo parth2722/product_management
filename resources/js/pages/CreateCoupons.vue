@@ -1,4 +1,3 @@
-<!-- src/components/CreateCoupons.vue -->
 
 <template>
     <div class="container mt-4">

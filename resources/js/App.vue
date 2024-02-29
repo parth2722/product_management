@@ -1,21 +1,20 @@
 <template>
-
-
-    <div id="app">
-          <!-- <div id="google_translate_element"></div> -->
-          <!-- <button @click="callMyMethod">Call My Method</button> -->
+    <v-container>
+        <div id="app">
+            <!-- <div id="google_translate_element"></div> -->
+            <!-- <button @click="callMyMethod">Call My Method</button> -->
             <router-view></router-view>
 
-    </div>
-
+        </div>
+    </v-container>
 </template>
 <script>
 export default {
-  methods: {
-    callMyMethod() {
-      this.$myMethod(); // Access the custom method from the plugin
+    methods: {
+        callMyMethod() {
+            this.$myMethod();
+        },
     },
-  },
 };
 </script>
 <style>

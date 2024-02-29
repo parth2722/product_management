@@ -5,7 +5,7 @@
                 <h2>Login</h2>
                 <v-alert v-if="error" type="error">{{ error }}</v-alert>
                 <v-form @submit.prevent="login">
-                    <v-text-field v-model="form.email" label="Email Address" type="email"
+                    <v-text-field v-model="form.email" label="Email" type="email"
                         :rules="emailRules"></v-text-field>
                     <v-text-field v-model="form.password" label="Password" type="password"
                         :rules="passwordRules"></v-text-field>

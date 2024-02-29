@@ -1,6 +1,6 @@
 <template>
     <div>
-        <launch-sale></launch-sale>
+        <!-- <launch-sale></launch-sale> -->
         <v-container class="py-8">
             <div class="text-gray-600">
                 Showing {{ filteredProducts.length }} results for "<span class="font-semibold">{{ searchQuery }}</span>"

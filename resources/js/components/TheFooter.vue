@@ -2,7 +2,7 @@
 
 <template>
     <div>
-        <footer class="bg-gray-300 text-gray py-2">
+        <footer class="py-2">
             <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between">
                 <!-- <div class="mb-4 lg:mb-0">
                 <p class="text-lg">&copy; 2024 VuCommerce. All rights reserved.</p>
@@ -37,13 +37,6 @@
         </footer>
     </div>
 
-    <!-- <div>
-        <footer>
-            <div class="footer-content">
-                <p>&copy; 2024 VuCommerce. All rights reserved.</p>
-            </div>
-        </footer>
-    </div> -->
 </template>
 
 <style scoped>

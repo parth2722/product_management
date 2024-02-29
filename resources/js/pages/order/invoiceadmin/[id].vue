@@ -175,7 +175,7 @@ const saveInvoice = async () => {
 
 const fetchOrders = async () => {
     try {
-        console.log('?')
+
         const response = await axios.get(`http://localhost:8000/api/showorders/${route.params.id}`);
         orders.value = response.data;
         console.log('fetchorders', response.data)

@@ -182,7 +182,7 @@ const saveInvoice = async () => {
 const createInvoicePDF = (order, addresses) => {
     try {
 
-        console.log('OrdASDeASDrs:', orders.value);
+
         console.log('Order Items:', orders.value.orderitem);
         // Create a new instance of jsPDF
         const pdf = new jsPDF();

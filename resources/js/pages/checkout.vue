@@ -70,7 +70,7 @@
                 <v-card>
 
                     <!-- Add New Address Button -->
-                    <v-btn class="btn" color="green" @click="showAddressForm = true">Add New Address</v-btn>
+                    <v-btn class="btn" color="orange" @click="showAddressForm = true">Add New Address</v-btn>
 
                     <!-- Address Form -->
                     <v-card-text v-if="showAddressForm">
@@ -103,11 +103,6 @@
                         </tr>
 
                         <br>
-                        <tr>
-                            <td>Delivery Charges</td>
-                            <td style="color: green;">Free</td>
-                        </tr>
-
                         <tr v-if="isCouponApplied">
                             <td class="py-2">
                                 Coupon Discount ({{ appliedCouponCode.code }}):
@@ -117,6 +112,7 @@
                             </td>
                         </tr>
 
+                        <br>
                         <tr>
                             <h5>
                                 <td>Total Amount</td>
@@ -127,13 +123,17 @@
                             </td>
                         </tr>
 
-                            <tr>
+                        <tr>
                             <td colspan="2" class="py-4">
                                 <div class="flex items-center">
                                     <div class="flex items-center">
                                         <!-- Hide the button and input field when appliedCouponCode is present -->
-                                        <button v-if="!isCouponApplied" @click="applyCoupon" class="bg-blue-500 text-white py-2 px-4 mr-2 rounded">Apply Coupon</button>
-                                        <input v-if="!isCouponApplied" v-model="code" type="text" placeholder="Coupon Code" :class="{ 'border-red-500': codeError }" class="border border-gray-300 py-2 px-4">
+                                        <button v-if="!isCouponApplied" @click="applyCoupon"
+                                            class="bg-orange-400 text-white py-2 px-4 mr-2 rounded">Apply Coupon</button>
+                                        <input v-if="!isCouponApplied" v-model="code" type="text" placeholder="Coupon Code"
+                                            :class="{ 'border-red-500': codeError }"
+                                            class="border border-gray-300 py-2 px-4">
+
                                     </div>
                                     <p v-if="codeError" class="text-red-500 mt-2">{{ codeErrorMessage }}</p>
                                 </div>
@@ -190,25 +190,22 @@
 <script setup>
 
 import { onMounted, ref, computed, watch } from 'vue';
-import { useCartStore } from '../stores/store';
 import { useMainStore } from '../store/index';
 import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 
 import { loadStripe } from '@stripe/stripe-js'
-const cartStore = useCartStore();
 const mainStore = useMainStore();
 const showAddressForm = ref(false);
-
+const showOriginalTotal = ref(true);
 const router = useRouter();
-const route = useRoute()
 const code = ref(localStorage.getItem('appliedCouponCode') || '');
 const cartItems = ref([]);
 const isCouponApplied = ref(!!localStorage.getItem('appliedCouponCode'));
 const appliedCouponCode = ref(JSON.parse(localStorage.getItem('appliedCouponCode')) || {});
 const codeError = ref(false);
 const codeErrorMessage = ref('');
-const couponAlreadyApplied = ref(false);
+
 
 const formData = ref({
     fullName: '',
@@ -238,15 +235,6 @@ const addresses = ref({
     checked: true,
 });
 
-const orderAddress = ref({
-    fullName: '',
-    postcode: '',
-    city: '',
-    state: '',
-    country: '',
-    email: '',
-    phone: '',
-});
 
 const editedAddress = ref({
     id: '',
@@ -278,7 +266,7 @@ const fetchLoggedInUser = async () => {
 };
 
 const storedCouponCode = localStorage.getItem('appliedCouponCode');
-        console.log('add',storedCouponCode)
+console.log('add', storedCouponCode)
 
 const handlePaymentAndConfirmOrder = async () => {
     await setOrderIdAndCustomerId();
@@ -344,48 +332,44 @@ const setOrderIdAndCustomerId = async () => {
 
 const applyCoupon = async () => {
     try {
-        if (storedCouponCode) {
-            // Set flags to display a message
-            couponAlreadyApplied.value = true;
-            appliedCouponCode.value = storedCouponCode;
+        const response = await axios.get(`http://127.0.0.1:8000/api/coupons/${code.value}`);
+
+        if (response.data && response.data.length > 0 && response.data[0].discount_amount !== undefined) {
+            const discountAmount = response.data[0].discount_amount;
+            const parth = response.data[0]
+            console.log('pp', parth)
+            console.log('Discount Amount:', discountAmount);
+
+            // Calculate total amount before discount
+            const totalAmountBeforeDiscount = cartItems.value.reduce((total, item) => {
+                return total + item.price * item.quantity;
+            }, 0);
+
+            // Apply the discount to the total amount
+            const discountedTotalAmount = totalAmountBeforeDiscount - discountAmount;
+
+            // Save the updated total amount to cartItems
+            cartItems.value.forEach((item) => {
+                item.totalAmount = discountedTotalAmount;
+            });
+
+            localStorage.setItem('cartItems', JSON.stringify(cartItems.value));
+            showOriginalTotal.value = false;
+            console.log('Coupon applied successfully!');
+            console.log('Updated Cart Items:', cartItems.value);
+            isCouponApplied.value = true;
+            appliedCouponCode.value = response.data[0];
+            localStorage.setItem('appliedCouponCode', JSON.stringify(parth));
         } else {
-            const response = await axios.get(`http://127.0.0.1:8000/api/coupons/${code.value}`);
-
-            if (response.data && response.data.length > 0 && response.data[0].discount_amount !== undefined) {
-                const discountAmount = response.data[0].discount_amount;
-                console.log('Discount Amount:', discountAmount);
-
-                // Calculate total amount before discount
-                const totalAmountBeforeDiscount = cartItems.value.reduce((total, item) => {
-                    return total + item.price * item.quantity;
-                }, 0);
-
-                // Apply the discount to the total amount
-                const discountedTotalAmount = totalAmountBeforeDiscount - discountAmount;
-
-                // Save the updated total amount to cartItems
-                cartItems.value.forEach((item) => {
-                    item.totalAmount = discountedTotalAmount;
-                });
-
-                // Save the updated cartItems to localStorage
-                localStorage.setItem('cartItems', JSON.stringify(cartItems.value));
-                showOriginalTotal.value = false;
-                console.log('Coupon applied successfully!');
-                console.log('Updated Cart Items:', cartItems.value);
-                localStorage.setItem('appliedCouponCode', code.value);
-            } else {
-                console.log('Invalid coupon response. Please check the API response.');
-                codeError.value = true;
-                codeErrorMessage.value = 'Error applying coupon. Please try again later.';
-            }
+            console.log('Invalid coupon response. Please check the API response.');
+            codeError.value = true;
+            codeErrorMessage.value = 'Error applying coupon. Please try again later.';
         }
     } catch (error) {
         console.error('Error applying coupon:', error);
         // Handle other potential errors, such as network issues or server errors
     }
 };
-
 
 const handleCheckboxChange = async () => {
     try {
@@ -399,7 +383,6 @@ const handleCheckboxChange = async () => {
 
         await addressdata();
 
-        console.log('asffffd', cartItems);
         if (!storedUser || !cartItems) {
             // Handle the case where user information or cart items are not found in localStorage
             console.error('User information or cart items not found in localStorage');
@@ -407,8 +390,8 @@ const handleCheckboxChange = async () => {
         }
 
         const grandTotal = cartItems[0].totalAmount;
-        const couponsCode=appliedCouponCode.value.code
-        console.log('ccccooocococo',couponsCode)
+        const couponsCode = appliedCouponCode.value.code
+
         const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
         const totalItems = cartItems.length;
 
@@ -539,7 +522,7 @@ const handlePayment = async () => {
         const cartItems = JSON.parse(localStorage.getItem('cartItems'));
         await addressdata();
 
-        console.log('asffffd', cartItems);
+
         if (!storedUser || !cartItems) {
             // Handle the case where user information or cart items are not found in localStorage
             console.error('User information or cart items not found in localStorage');
@@ -553,7 +536,7 @@ const handlePayment = async () => {
         const stripe = await loadStripe('pk_test_51OernzJ7YilluosLViNAJC2RUPGpKVFDwmn7MmVZoGXZhDGBFrkigEYSyZcTgWj7you2buBAXkrfq7jACGvbtzfl00YJbqLvW3');
 
         // Get user information from your authentication store (you may need to replace this with your own method)
-        console.log('aoo', userInfo.value.name)
+
 
         // Step 1: Create a customer on Stripe
         const customerResponse = await axios.post('https://api.stripe.com/v1/customers', {
@@ -565,7 +548,7 @@ const handlePayment = async () => {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
         });
-        console.log('aoo', userInfo.value.name)
+
         const customerId = customerResponse.data.id;
 
         // Step 2: Create a PaymentIntent
@@ -701,8 +684,6 @@ const handlePayment = async () => {
 };
 
 
-// const cartID = localStorage.getItem('cartItems');
-// console.log('parth', cartID)
 const addressdata = async () => {
     try {
 
@@ -744,11 +725,6 @@ const cvv = ref('');
 
 
 
-const saveFormDataToLocalStorage = (data) => {
-    if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('billingInfo', JSON.stringify(data));
-    }
-};
 
 const clearFormData = () => {
     // Reset each property to an empty string or a default value
@@ -776,16 +752,21 @@ onMounted(() => {
     if (storedFormData) {
         formData.value = JSON.parse(storedFormData);
     }
-    console.log('asdas', storedItems);
+
     // Retrieve userInfo from local storage
     const storedUserInfo = localStorage.getItem('user');
-    console.log('asdas', storedUserInfo);
+
     if (storedUserInfo) {
         userInfo.value = JSON.parse(storedUserInfo);
     }
-    // showOriginalTotal.value = cartItems.length > 0 && cartItems[0].totalAmount !== undefined;
+    const storedCoupon = localStorage.getItem('appliedCouponCode');
+    if (storedCoupon) {
+        isCouponApplied.value = true;
+        appliedCouponCode.value = JSON.parse(storedCoupon);
+        showOriginalTotal.value = false;
+    }
 });
-console.log('aoo:', userInfo.value.name)
+
 </script>
 
 <style scoped>
